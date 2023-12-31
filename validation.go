@@ -32,17 +32,6 @@ func getDefinedPaths(rootUrl string) []string {
 	return mainPaths
 }
 
-func checkHttpScheme(r *http.Request) error {
-	parsedUrl, err := url.Parse(r.URL.String())
-	if err != nil {
-		log.Fatal(err)
-	}
-	if parsedUrl.Scheme != "http" || parsedUrl.Scheme != "https" {
-		return errors.New(fmt.Sprintf("%s scheme is not supported", parsedUrl.Scheme))
-	}
-	return nil
-}
-
 func checkHttpMethod(r *http.Request) error {
 	if r.Method != http.MethodGet {
 		return errors.New(fmt.Sprintf("%s method is not supported", r.Method))
@@ -57,10 +46,11 @@ func checkDefinedPaths(r *http.Request) error {
 	if err != nil {
 		log.Fatal(err)
 	}
-	for index, value := range mainPaths {
-		if !strings.Contains(value, parsedUrl.Path) && index == len(mainPaths)-1 {
-			return errors.New(fmt.Sprintf("Invalid path requested, %s is not defined", parsedUrl.Path))
+	parts := strings.Split(parsedUrl.Path, "/")
+	for _, value := range mainPaths {
+		if strings.Contains(value, parts[1]) {
+			return nil
 		}
 	}
-	return nil
+	return errors.New(fmt.Sprintf("Invalid path requested, %s is not defined", parsedUrl.Path))
 }
