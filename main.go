@@ -29,7 +29,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 
 	// creating the new proxy request
 	urlParts := strings.Split(r.URL.String(), "/")
-	destinationUrl := fmt.Sprintf("%s%s", rootUrl, strings.Join(urlParts[1:3], "/"))
+	destinationUrl := fmt.Sprintf("%s%s", rootUrl, strings.Join(urlParts[1:], "/"))
 	proxyReq, err := http.NewRequest(http.MethodGet, destinationUrl, r.Body)
 	log.Printf("Forwarding request to the %s", destinationUrl)
 	if err != nil {
@@ -67,7 +67,7 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// add http status code to return response
-	w.WriteHeader(http.StatusOK)
+	w.WriteHeader(resp.StatusCode)
 
 	// copy the response body to the return response
 	log.Println("Writing response body to the return response")

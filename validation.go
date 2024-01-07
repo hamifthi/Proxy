@@ -47,6 +47,9 @@ func checkDefinedPaths(r *http.Request) error {
 		log.Fatal(err)
 	}
 	parts := strings.Split(parsedUrl.Path, "/")
+	if len(parts) < 3 && targetUrl == "/" {
+		return nil
+	}
 	for _, value := range mainPaths {
 		if strings.Contains(value, parts[1]) {
 			return nil
