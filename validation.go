@@ -34,6 +34,7 @@ func getDefinedPaths(rootUrl string) []string {
 
 func checkHttpMethod(r *http.Request) error {
 	if r.Method != http.MethodGet {
+		log.Printf("%s method is not supported", r.Method)
 		return errors.New(fmt.Sprintf("%s method is not supported", r.Method))
 	}
 	return nil
@@ -55,5 +56,6 @@ func checkDefinedPaths(r *http.Request) error {
 			return nil
 		}
 	}
+	log.Printf("Error %s checking destination path", err)
 	return errors.New(fmt.Sprintf("Invalid path requested, %s is not defined", parsedUrl.Path))
 }
