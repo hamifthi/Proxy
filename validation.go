@@ -41,6 +41,10 @@ func checkHttpMethod(r *http.Request) error {
 }
 
 func checkDefinedPaths(r *http.Request) error {
+	rootUrl, err := getEnv("RootUrl")
+	if err != nil {
+		log.Fatal(err)
+	}
 	mainPaths := getDefinedPaths(rootUrl)
 	targetUrl := r.URL.String()
 	parsedUrl, err := url.Parse(targetUrl)

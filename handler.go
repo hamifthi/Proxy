@@ -10,6 +10,10 @@ import (
 
 func modifyRequestForProxy(r *http.Request) (*http.Request, error) {
 	urlParts := strings.Split(r.URL.String(), "/")
+	rootUrl, err := getEnv("RootUrl")
+	if err != nil {
+		log.Fatal(err)
+	}
 	destinationUrl := fmt.Sprintf("%s%s", rootUrl, strings.Join(urlParts[1:], "/"))
 	proxyReq, err := http.NewRequest(http.MethodGet, destinationUrl, r.Body)
 

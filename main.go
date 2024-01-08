@@ -1,11 +1,10 @@
 package main
 
 import (
+	"github.com/joho/godotenv"
 	"log"
 	"net/http"
 )
-
-var rootUrl = "https://swapi.dev/api/"
 
 func handleRequest(w http.ResponseWriter, r *http.Request) {
 	// first there are checking that must be done on incoming request
@@ -42,9 +41,22 @@ func handleRequest(w http.ResponseWriter, r *http.Request) {
 	return
 }
 
+func init() {
+	err := godotenv.Load()
+	if err != nil {
+		log.Fatal("Error loading .env file")
+	}
+}
+
 func main() {
+
+	serverPort, err := getEnv("ServerPort")
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	server := http.Server{
-		Addr:    ":8080",
+		Addr:    serverPort,
 		Handler: http.HandlerFunc(handleRequest),
 	}
 	if err := server.ListenAndServe(); err != nil {
